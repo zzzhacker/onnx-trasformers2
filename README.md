@@ -1,6 +1,6 @@
 # onnx_transformers 2 
 ![onnx_transformers2](https://github.com/zzzhacker/onnx-trasformers2/blob/main/onnx-transformers2.png?raw=True)
-Accelerated NLP pipelines for fast inference 🚀 on CPU AND GPUS. Built with 🤗Transformers Pipeline and ONNX runtime.
+> Accelerated NLP pipelines for fast inference 🚀 on CPU AND GPUS. Built with 🤗Transformers Pipeline and ONNX runtime.
 
 ## Installation:
 
