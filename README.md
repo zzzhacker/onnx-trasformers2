@@ -1,4 +1,4 @@
-# onnx_transformers 2 
+# onnx_transformers2 
 ![onnx_transformers2](https://github.com/zzzhacker/onnx-trasformers2/blob/main/onnx-transformers2.png?raw=True)
 > Accelerated NLP pipelines for fast inference 🚀 on CPU AND GPUS. Built with 🤗Transformers Pipeline and ONNX runtime.
 
@@ -19,7 +19,7 @@ pip install https://github.com/zzzhacker/onnx-trasformers2.git
 - You can Also Specify the onnx output graph as 'onnx_output_dir' parameter
 
 ```python
-from onnx_transformers import pipeline
+from onnx_transformers2 import pipeline
 
 # Initialize a pipeline by passing the task name and 
 # set onnx to True (default value is also True)
