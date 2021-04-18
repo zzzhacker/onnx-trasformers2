@@ -1,0 +1,4 @@
+transformers>=4.4.0q    
+onnxruntime>=1.4.0
+onnxruntime-tools>=1.4.2
+psutil
