@@ -35,8 +35,10 @@ class TextClassificationPipeline(Pipeline):
     <https://huggingface.co/models?filter=text-classification>`__.
     """
 
-    def __init__(self, return_all_scores: bool = False, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, return_all_scores: bool = False,optimization_level:str='all',  **kwargs):
+        super().__init__(
+            optimization_level = optimization_level, 
+            **kwargs)
 
         # self.check_model_type(
         #     TF_MODEL_FOR_SEQUENCE_CLASSIFICATION_MAPPING

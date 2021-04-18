@@ -261,6 +261,7 @@ def pipeline(
     use_fast: bool = True,
     model_kwargs: Dict[str, Any] = {},
     onnx: bool = True,
+    optimization_level : str = 'all',
     **kwargs
 ) -> Pipeline:
     """
@@ -378,9 +379,9 @@ def pipeline(
     
     # Instantiate config
     if config is not None and isinstance(config, str):
-        config = AutoConfig.from_pretrained(config,revision=revision, _from_pipeline=task)
+        config = AutoConfig.from_pretrained(config,revision=revision)
     elif config is None:
-        config = AutoConfig.from_pretrained(model,revision=revision, _from_pipeline=task)
+        config = AutoConfig.from_pretrained(model,revision=revision)
 
     if onnx_model_dir:
         ONNX_CACHE_DIR = Path(onnx_model_dir)
@@ -403,11 +404,11 @@ def pipeline(
             # For tuple we have (tokenizer name, {kwargs})
             use_fast = tokenizer[1].pop("use_fast", use_fast)
             tokenizer = AutoTokenizer.from_pretrained(
-                tokenizer[0], use_fast=use_fast, revision=revision, _from_pipeline=task, **tokenizer[1]
+                tokenizer[0], use_fast=use_fast, revision=revision, **tokenizer[1]
             )
         else:
             tokenizer = AutoTokenizer.from_pretrained(
-                tokenizer, revision=revision, use_fast=use_fast, _from_pipeline=task
+                tokenizer, revision=revision, use_fast=use_fast
             )
 
     
@@ -434,7 +435,7 @@ def pipeline(
                 )
 
             model = model_class.from_pretrained(
-                model, config=config, revision=revision, _from_pipeline=task, **model_kwargs
+                model, config=config, revision=revision, **model_kwargs
             )
 
         if task == "translation" and model.config.task_specific_params:
@@ -447,4 +448,4 @@ def pipeline(
                     )
                     break
 
-    return task_class(model=model, tokenizer=tokenizer,config=config, modelcard=modelcard, framework=framework, task=task, onnx=onnx,graph_path=graph_path,**kwargs)
+    return task_class(model=model, tokenizer=tokenizer,config=config, modelcard=modelcard, framework=framework, task=task, onnx=onnx,graph_path=graph_path,optimization_level=optimization_level,**kwargs)

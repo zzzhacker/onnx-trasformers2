@@ -64,6 +64,7 @@ class FillMaskPipeline(Pipeline):
         task: str = "",
         onnx: bool = True,
         graph_path: Optional[Path] = None,
+        optimization_level : str = 'all',
     ):
         super().__init__(
             model=model,
@@ -76,7 +77,8 @@ class FillMaskPipeline(Pipeline):
             binary_output=True,
             task=task,
             onnx=onnx,
-            graph_path=graph_path
+            graph_path=graph_path,
+            optimization_level=optimization_level
         )
         if not onnx:
             self.check_model_type(TF_MODEL_WITH_LM_HEAD_MAPPING if self.framework == "tf" else MODEL_FOR_MASKED_LM_MAPPING)

@@ -59,6 +59,7 @@ class FeatureExtractionPipeline(Pipeline):
         task: str = "",
         onnx: bool = True,
         graph_path: Optional[Path] = None,
+        optimization_level : str = 'all'
     ):
         super().__init__(
             model=model,
@@ -70,7 +71,8 @@ class FeatureExtractionPipeline(Pipeline):
             binary_output=True,
             task=task,
             onnx=onnx,
-            graph_path=graph_path
+            graph_path=graph_path,
+            optimization_level=optimization_level
         )
 
     def __call__(self, *args, **kwargs):

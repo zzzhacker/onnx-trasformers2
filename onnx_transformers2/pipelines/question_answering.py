@@ -120,6 +120,7 @@ class QuestionAnsweringPipeline(Pipeline):
         task: str = "",
         onnx: bool = True,
         graph_path: Optional[Path] = None,
+        optimization_level: str = 'all',
         **kwargs
     ):
         super().__init__(
@@ -131,6 +132,7 @@ class QuestionAnsweringPipeline(Pipeline):
             task=task,
             onnx=onnx,
             graph_path=graph_path,
+            optimization_level=optimization_level,
             **kwargs,
         )
 

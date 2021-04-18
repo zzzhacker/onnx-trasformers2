@@ -49,6 +49,14 @@ if TYPE_CHECKING:
 
 logger = logging.get_logger(__name__)
 
+
+GRAPH_OPTIMIZATIONS = {
+    'all' : GraphOptimizationLevel.ORT_ENABLE_ALL, #Enables all available optimizations including layout
+    'disable_all' : GraphOptimizationLevel.ORT_DISABLE_ALL, #Enables all available optimizations including layout
+    'basic' : GraphOptimizationLevel.ORT_ENABLE_BASIC,#Enables basic optimizations
+    'extended' : GraphOptimizationLevel.ORT_ENABLE_EXTENDED #Enables basic and extended optimizations
+}
+
 def infer_framework_from_model(
     model, model_classes: Optional[Dict[str, type]] = None, revision: Optional[str] = None, task: Optional[str] = None,
     onnx: bool = True,graph_path: Optional[Path] = None):
@@ -85,31 +93,34 @@ def infer_framework_from_model(
         if isinstance(model, str):
             if is_torch_available() and not is_tf_available():
                 model_class = model_classes.get("pt", AutoModel)
-                model = model_class.from_pretrained(model, revision=revision, _from_pipeline=task)
+                model = model_class.from_pretrained(model, revision=revision)
             elif is_tf_available() and not is_torch_available():
                 model_class = model_classes.get("tf", TFAutoModel)
-                model = model_class.from_pretrained(model, revision=revision, _from_pipeline=task)
+                model = model_class.from_pretrained(model, revision=revision)
             else:
                 try:
                     model_class = model_classes.get("pt", AutoModel)
-                    model = model_class.from_pretrained(model, revision=revision, _from_pipeline=task)
+                    model = model_class.from_pretrained(model, revision=revision)
                 except OSError:
                     model_class = model_classes.get("tf", TFAutoModel)
-                    model = model_class.from_pretrained(model, revision=revision, _from_pipeline=task)
+                    model = model_class.from_pretrained(model, revision=revision)
             framework = "tf" if model.__class__.__name__.startswith("TF") else "pt"
     else:
         framework = "pt" if is_torch_available() else "tf"
 
     return framework, model
 
-def create_model_for_provider(model_path: str, provider: str) -> InferenceSession:
+def create_model_for_provider(model_path: str, provider: str, optimization_level:str ) -> InferenceSession:
 
     assert provider in get_all_providers(), f"provider {provider} not found, {get_all_providers()}"
 
     # Few properties that might have an impact on performances (provided by MS)
     options = SessionOptions()
     options.intra_op_num_threads = 1
-    options.graph_optimization_level = GraphOptimizationLevel.ORT_ENABLE_ALL
+    if optimization_level in GRAPH_OPTIMIZATIONS:
+        options.graph_optimization_level = GRAPH_OPTIMIZATIONS[optimization_level]
+    else:
+        raise KeyError(f"Unknown Optimization Level {optimization_level} (Available optimization level are all/disable_all/basic/extended)")
 
     # Load the model as a graph and prepare the CPU backend
     session = InferenceSession(model_path, options, providers=[provider])
@@ -550,6 +561,7 @@ class Pipeline(_ScikitCompat):
         binary_output: bool = False,
         onnx: bool = True,
         graph_path: Optional[Path] = None,
+        optimization_level : str = 'all'
     ):
 
         if framework is None:
@@ -565,6 +577,7 @@ class Pipeline(_ScikitCompat):
         self.binary_output = binary_output
         self.onnx = onnx
         self.graph_path = graph_path
+        self.optimization_level = optimization_level
 
         # Special handling
         if self.framework == "pt" and self.device.type == "cuda" and (not onnx):
@@ -576,7 +589,7 @@ class Pipeline(_ScikitCompat):
                 self._export_onnx_graph(input_names_path)
 
             logger.info(f"loading onnx graph from {self.graph_path.as_posix()}")
-            self.onnx_model = create_model_for_provider(str(graph_path), "CPUExecutionProvider")
+            self.onnx_model = create_model_for_provider(str(graph_path), "CPUExecutionProvider",optimization_level)
             self.input_names = json.load(open(input_names_path))
             self.framework = "np"
             self._warup_onnx_graph()

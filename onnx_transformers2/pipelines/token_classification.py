@@ -90,6 +90,7 @@ class TokenClassificationPipeline(Pipeline):
         ignore_subwords: bool = False,
         onnx: bool = True,
         graph_path: Optional[Path] = None,
+        optimization_level: str = 'all'
     ):
         super().__init__(
             model=model,
@@ -101,7 +102,8 @@ class TokenClassificationPipeline(Pipeline):
             binary_output=binary_output,
             task=task,
             onnx=onnx,
-            graph_path=graph_path
+            graph_path=graph_path,
+            optimization_level=optimization_level
         )
         if not onnx:
             self.check_model_type(
