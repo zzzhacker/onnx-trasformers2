@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING, Optional, Union
 from pathlib import Path
 from transformers.modelcard import ModelCard
 from transformers.tokenization_utils import PreTrainedTokenizer
+from transformers.configuration_utils import PretrainedConfig
 from .base import ArgumentHandler, Pipeline
 
 

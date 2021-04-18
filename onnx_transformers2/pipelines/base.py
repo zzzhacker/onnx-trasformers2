@@ -704,7 +704,6 @@ class Pipeline(_ScikitCompat):
     def __call__(self, *args, **kwargs):
         inputs = self._parse_and_tokenize(*args, **kwargs)
         if self.onnx:
-            print('onnx forward')
             return self._forward_onnx(inputs)
         else:
             return self._forward(inputs)
