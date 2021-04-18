@@ -51,6 +51,7 @@ class FeatureExtractionPipeline(Pipeline):
     def __init__(
         self,
         model: Union["PreTrainedModel", "TFPreTrainedModel"],
+        config : PretrainedConfig,
         tokenizer: PreTrainedTokenizer,
         modelcard: Optional[ModelCard] = None,
         framework: Optional[str] = None,
@@ -63,6 +64,7 @@ class FeatureExtractionPipeline(Pipeline):
     ):
         super().__init__(
             model=model,
+            config=config,
             tokenizer=tokenizer,
             modelcard=modelcard,
             framework=framework,
