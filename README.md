@@ -5,7 +5,7 @@
 ## Installation:
 
 ```bash
-pip install https://github.com/zzzhacker/onnx-trasformers2.git
+pip install git+https://github.com/zzzhacker/onnx-trasformers2.git
 ```
 
 ## Usage:
