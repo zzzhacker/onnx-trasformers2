@@ -57,3 +57,5 @@ Calling the pipeline for the first time loads the model, creates the onnx graph,
 
 The key difference between HF pipeline and onnx_transformers is that the `model` parameter should always be a `string` (path or url to the saved model).
 
+#### Credits
+I built this on top of @patil-suraj  [onnx_transformers](https://github.com/patil-suraj/onnx_transformers) repo to extend it to support more pipelines
